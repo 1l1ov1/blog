@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.blog</groupId>
+    <artifactId>common-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>common-service</name>
+    <description>common-service</description>
+
+    <parent>
+        <artifactId>blog-manage</artifactId>
+        <groupId>com.blog</groupId>
+        <version>1.0.0</version>
+    </parent>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <spring-boot.version>2.7.6</spring-boot.version>
+    </properties>
+    <dependencies>
+        <!-- Apache Commons Pool2依赖，用于对象池化技术，提高性能和资源利用率 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <!-- Hutool工具包，提供简洁易用的工具方法，减少重复代码 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <!-- Alibaba Fastjson依赖，用于JSON处理，版本号为1.2.78 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.78</version>
+        </dependency>
+
+        <!-- 完成SpringMVC自动装配 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 日志处理依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+        <!-- Tomcat嵌入式核心库，用于提供Servlet容器功能，版本号为9.0.73 -->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.73</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- MyBatis-Plus核心库和扩展库，用于简化与数据库的交互，版本号由变量${mybatis-plus.version}指定 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-core</artifactId>
+            <version>${mybatis-plus.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>${mybatis-plus.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Hibernate Validator依赖，用于提供验证功能 -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <!-- Spring Boot自动配置依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <!-- Knife4j OpenAPI2 Spring Boot Starter，用于提供API文档生成功能 -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
+            <version>4.1.0</version>
+        </dependency>
+        <!-- Caffeine缓存库，用于提供高性能的缓存解决方案 -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+        <!-- AMQP依赖，用于支持高级消息队列协议 -->
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-amqp</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Spring整合Rabbit依赖，用于支持RabbitMQ消息队列 -->
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- JSON处理依赖，用于提供JSON与XML之间的转换功能 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Spring Boot Starter Data Redis依赖，用于支持Redis数据存储 -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-redis</artifactId>-->
+<!--        </dependency>-->
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <mainClass>com.blog.common.CommonServiceApplication</mainClass>
+                    <skip>true</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

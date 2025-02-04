@@ -4,29 +4,77 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.blog</groupId>
     <artifactId>blog-manage</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <!--指定项目的打包方式，这里是 pom，表示这是一个父项目，用于管理多个子模块。-->
+    <packaging>pom</packaging>
+    <!-- 项目的版本号，这里是 1.0.0-->
+    <version>1.0.0</version>
     <name>blog-manage</name>
     <description>blog-manage</description>
+    <!--列出了该项目包含的子模块-->
+    <modules>
+        <!--API 网关（路由、限流）-->
+        <module>gateway-service</module>
+        <!--用户认证、权限管理-->
+        <module>auth-service</module>
+        <!--通用的服务-->
+        <module>common-service</module>
+    </modules>
+    <!--该项目继承的父项目-->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.6</version>
+        <relativePath/>
+    </parent>
+    <!--定义了一些常用的属性值，方便统一管理版本号-->
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.7.6</spring-boot.version>
+        <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
+        <spring-cloud.version>2021.0.3</spring-cloud.version>
+        <mysql.version>8.0.23</mysql.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <redis.version>3.16.3</redis.version>
+        <lombok.version>1.18.20</lombok.version>
+        <hutool.version>5.8.16</hutool.version>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <!--用于集中管理依赖的版本号，确保所有子模块使用一致的依赖版本。-->
     <dependencyManagement>
         <dependencies>
+            <!-- 添加Knife4j依赖，用于增强SwaggerUI功能 -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+            </dependency>
+
+            <!-- 添加MySQL数据库连接器依赖，用于Java应用连接MySQL数据库 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+            <!-- 引入MyBatis-Plus框架依赖，用于简化数据库操作 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- 添加Redisson依赖，用于在Spring Boot应用中集成Redis -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redis.version}</version>
+            </dependency>
+            <!-- 引入Hutool工具库依赖，提供便捷的工具方法 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <!-- 引入Spring Boot依赖集合，统一管理Spring Boot相关依赖的版本 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -34,39 +82,57 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- 引入Spring Cloud Alibaba依赖集合，统一管理Spring Cloud Alibaba相关依赖的版本 -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- 引入Spring Cloud依赖集合，统一管理Spring Cloud相关依赖的版本 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+
+        <!---->
+    </dependencies>
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
-                <configuration>
-                    <mainClass>com.blog.blogmanage.BlogManageApplication</mainClass>
-                    <skip>true</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>repackage</id>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 </project>

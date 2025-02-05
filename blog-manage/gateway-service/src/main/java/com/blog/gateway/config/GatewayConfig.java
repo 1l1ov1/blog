@@ -1,5 +1,7 @@
 package com.blog.gateway.config;
 
+import com.blog.common.context.UserContext;
+import com.blog.gateway.utils.JwtUtil;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -33,13 +35,13 @@ public class GatewayConfig {
         // 构建路由规则
         return builder.routes()
                 // 配置用户服务的路由
-                .route("user-service", r -> r.path("/api/users/**")
+                .route("user-service", r -> r.path("/users/**")
                         .uri("lb://user-service"))
                 // 配置文章服务的路由
-                .route("article-service", r -> r.path("/api/articles/**")
+                .route("article-service", r -> r.path("/articles/**")
                         .uri("lb://article-service"))
                 // 配置认证服务的路由
-                .route("auth-service", r -> r.path("/api/auth/**")
+                .route("auth-service", r -> r.path("/auth/**")
                         .uri("lb://auth-service"))
                 // 结束路由规则配置并构建
                 .build();
@@ -47,7 +49,7 @@ public class GatewayConfig {
 
     /**
      * 配置Security过滤链
-     *
+     * <p>
      * 该方法定义了如何配置WebFlux中的Security过滤链，以保护WebFlux应用免受未经授权的访问
      * 它特别关注于跨域资源共享（CORS）配置和路径级别的安全授权
      *
@@ -64,12 +66,13 @@ public class GatewayConfig {
                 // 配置路径级别的安全授权
                 .authorizeExchange()
                 // 允许所有与'/api/auth/**'路径匹配的请求无需认证
-                .pathMatchers("/api/auth/**").permitAll()
+                .pathMatchers("/auth/**").permitAll()
                 // 其他所有交换都需要经过身份验证
                 .anyExchange().authenticated()
                 // 在特定过滤器之前添加自定义的CORS过滤器
                 .and()
-                .addFilterBefore(corsFilter(), SecurityWebFiltersOrder.REACTOR_CONTEXT);
+                .addFilterBefore(corsFilter(), SecurityWebFiltersOrder.REACTOR_CONTEXT)
+                .addFilterBefore(authFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
         // 构建并返回配置好的Security过滤链
         return http.build();
     }
@@ -109,5 +112,44 @@ public class GatewayConfig {
             // 继续执行后续的过滤器
             return chain.filter(ctx);
         };
+    }
+
+    /**
+     * 创建一个认证过滤器
+     * 该过滤器用于拦截HTTP请求，以验证请求中的JWT令牌
+     * 如果令牌无效或缺失，将返回401未授权状态码
+     * 如果令牌有效，将解析出用户ID，并将其设置到用户上下文中，以便后续的处理函数使用
+     *
+     * @return WebFilter 返回一个WebFilter，它是一个函数式接口，用于定义如何处理每个请求
+     */
+    private WebFilter authFilter() {
+        return (ServerWebExchange ctx, WebFilterChain chain) -> {
+            // 获取当前请求
+            ServerHttpRequest request = ctx.getRequest();
+            System.out.println(request.getRemoteAddress());
+            // 从请求中提取JWT令牌
+            String token = extractToken(request);
+            // 检查令牌是否为空或无效
+            if (token == null || JwtUtil.validateToken(token) == null) {
+                // 获取当前响应
+                ServerHttpResponse response = ctx.getResponse();
+                // 设置未授权状态码
+                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                // 结束响应，返回错误信息
+                return response.setComplete();
+            }
+            // 解析令牌中的用户ID，并设置到用户上下文中
+            UserContext.setUserId(JwtUtil.pareToken(token));
+            // 继续处理链中的下一个过滤器或处理函数
+            return chain.filter(ctx);
+        };
+    }
+
+    private String extractToken(ServerHttpRequest request) {
+        String authorizationHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+        return null;
     }
 }

@@ -2,7 +2,9 @@ package com.blog.gateway.utils;
 
 
 import cn.hutool.jwt.JWTUtil;
-import com.blog.exception.TokenException;
+import com.blog.common.enums.ErrorCode;
+import com.blog.common.exception.TokenException;
+import com.blog.common.exception.UserException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
@@ -24,7 +26,7 @@ public class JwtUtil {
      */
     public static String generateToken(Long userId) {
         if (userId == null || userId <= 0) {
-            throw new TokenException("非法的用户id");
+            throw new UserException(ErrorCode.INVALID_USER_ID);
         }
         return Jwts.builder()
                 .setSubject(userId + "")
@@ -49,11 +51,9 @@ public class JwtUtil {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            throw new TokenException("JWT 已过期", e);
+            throw new TokenException(ErrorCode.TOKEN_INVALID);
         } catch (MalformedJwtException e) {
-            throw new TokenException("无效的 JWT 格式", e);
-        } catch (Exception e) {
-            throw new TokenException("JWT 验证失败", e);
+            throw new TokenException(ErrorCode.TOKEN_EXPIRED);
         }
     }
 
@@ -63,7 +63,7 @@ public class JwtUtil {
             String userIdStr = claims.getSubject();
             return Long.parseLong(userIdStr);
         } catch (NumberFormatException e) {
-            throw new TokenException("无效的用户 ID 格式", e);
+            throw new UserException(ErrorCode.INVALID_USER_ID_FORMAT);
         }
     }
 }

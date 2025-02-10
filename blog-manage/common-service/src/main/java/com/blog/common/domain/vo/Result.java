@@ -1,4 +1,4 @@
-package com.blog.domain.vo;
+package com.blog.common.domain.vo;
 
 import lombok.Data;
 

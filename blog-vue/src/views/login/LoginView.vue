@@ -1,419 +1,203 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue';
+import UsernameForm from './components/UsernameForm.vue'
+import PhoneForm from './components/PhoneForm.vue'
+const formRef = ref(null);
+const loginType = ref('username'); // 当前登录方式：username（用户名）、phone（手机）
+// 切换登录方式
+const switchLoginType = (type) => {
+    loginType.value = type;
+};
 
-const loginForm = ref({
-    loginType: 'phone', // phone/email
-    phone: '',
-    email: '',
-    password: '',
-    captcha: ''
-})
+// 提交表单
+const submitForm = () => {
+    formRef.value.validate((valid) => {
+        if (valid) {
+            console.log('表单提交成功', form.value);
+        } else {
+            console.log('表单验证失败');
+        }
+    });
+};
+// 动态粒子初始化
+onMounted(() => {
+    const particles = document.querySelectorAll('.particle');
+    particles.forEach(particle => {
+        particle.style.width = `${Math.floor(Math.random() * 6 + 4)}px`;
+        particle.style.height = `${Math.floor(Math.random() * 6 + 4)}px`;
+        particle.style.left = `${Math.floor(Math.random() * 100)}%`;
+        particle.style.top = `${Math.floor(Math.random() * 100)}%`;
+        particle.style.animationDelay = `${Math.floor(Math.random() * 10) * -1}s`;
+    });
+});
 
-const loginTypes = [
-    { value: 'phone', label: '手机登录', icon: 'icon-mobile' },
-    { value: 'email', label: '邮箱登录', icon: 'icon-email' }
-]
-
-const handleSwitchLogin = (type) => {
-    loginForm.value.loginType = type
-    // 清空切换后的输入内容
-    loginForm.value.phone = ''
-    loginForm.value.email = ''
-}
 </script>
 
 <template>
     <div class="container">
         <div class="form-box">
-            <div class="login-form">
-                <!-- 动态背景形状 -->
-                <div class="decorate-bg">
-                    <div class="shape square"></div>
-                    <div class="shape circle"></div>
-                    <div class="shape triangle"></div>
-                </div>
-
-                <div class="form-content">
-                    <div class="form-header">
-                        <h1>Welcome Back</h1>
-                        <p>选择你的登录方式</p>
-                    </div>
-
-                    <!-- 登录方式切换 -->
-                    <div class="login-type-switch">
-                        <div v-for="item in loginTypes" :key="item.value" class="type-item"
-                            :class="{ active: loginForm.loginType === item.value }"
-                            @click="handleSwitchLogin(item.value)">
-                            <i class="iconfont" :class="item.icon"></i>
-                            <span>{{ item.label }}</span>
-                        </div>
-                    </div>
-
-                    <!-- 登录表单 -->
-                    <el-form :model="loginForm" class="form-group">
-                        <!-- 手机登录 -->
-                        <el-form-item v-if="loginForm.loginType === 'phone'">
-                            <el-input v-model="loginForm.phone" placeholder="请输入手机号码" size="large" class="custom-input">
-                                <template #prefix>
-                                    <i class="iconfont icon-mobile"></i>
-                                </template>
-                                <template #append>
-                                    <el-select v-model="areaCode" placeholder="+86" style="width: 90px"
-                                        class="area-select">
-                                        <el-option label="+86" value="+86" />
-                                        <el-option label="+852" value="+852" />
-                                        <el-option label="+853" value="+853" />
-                                    </el-select>
-                                </template>
-                            </el-input>
-                        </el-form-item>
-
-                        <!-- 邮箱登录 -->
-                        <el-form-item v-else>
-                            <el-input v-model="loginForm.email" placeholder="请输入邮箱地址" size="large" class="custom-input">
-                                <template #prefix>
-                                    <i class="iconfont icon-email"></i>
-                                </template>
-                            </el-input>
-                        </el-form-item>
-
-                        <!-- 公共表单项 -->
-                        <el-form-item>
-                            <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password
-                                size="large" class="custom-input">
-                                <template #prefix>
-                                    <i class="iconfont icon-lock"></i>
-                                </template>
-                            </el-input>
-                        </el-form-item>
-
-                        <el-form-item>
-                            <div class="captcha-box">
-                                <el-input v-model="loginForm.captcha" placeholder="验证码" size="large"
-                                    class="custom-input" style="width: 65%" />
-                                <div class="captcha-img">
-                                    <img src="https://picsum.photos/100/40" alt="captcha">
-                                    <i class="iconfont icon-refresh"></i>
-                                </div>
-                            </div>
-                        </el-form-item>
-
-                        <el-form-item>
-                            <el-button type="primary" class="login-btn" @click="handleLogin">
-                                <i class="iconfont icon-login"></i>
-                                立即登录
-                            </el-button>
-                        </el-form-item>
-
-                        <div class="form-footer">
-                            <span>其他登录方式</span>
-                            <div class="social-login">
-                                <i class="iconfont icon-wechat"></i>
-                                <i class="iconfont icon-qq"></i>
-                                <i class="iconfont icon-github"></i>
-                            </div>
-                        </div>
-                    </el-form>
-                </div>
+            <div class="header">
+                <h1>欢迎回来</h1>
+                <p>开启您的数字之旅</p>
             </div>
+
+            <!-- 登录方式切换 -->
+            <div class="login-type">
+                <el-button :type="loginType === 'username' ? 'primary' : 'text'" @click="switchLoginType('username')">
+                    用户名登录
+                </el-button>
+                <el-button :type="loginType === 'phone' ? 'primary' : 'text'" @click="switchLoginType('phone')">
+                    手机登录
+                </el-button>
+                <!-- <el-button :type="loginType === 'email' ? 'primary' : 'text'" @click="switchLoginType('email')">
+                    邮箱登录
+                </el-button> -->
+            </div>
+
+            <!-- 用户名登录 -->
+            <UsernameForm :loginType="loginType" />
+
+            <!-- 手机登录 -->
+            <PhoneForm :loginType="loginType" />
+
+            <!-- 邮箱登录 
+            <el-form v-if="loginType === 'email'" :model="form" ref="formRef">
+                <el-form-item prop="email">
+                    <el-input v-model="form.email" placeholder="请输入邮箱" prefix-icon="Message" size="large" clearable />
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-input v-model="form.password" placeholder="请输入密码" prefix-icon="Lock" size="large" show-password
+                        clearable />
+                </el-form-item>
+            </el-form>
+            -->
+
+            <!-- 提交按钮 -->
+            <el-button type="primary" size="large" round class="submit-btn" @click="submitForm">
+                立即登录
+            </el-button>
+
+            <!-- 忘记密码和注册链接 -->
+            <div class="footer-links">
+                <el-link type="info" @click="$router.push('/forgot-password')">
+                    忘记密码
+                </el-link>
+                <el-link type="primary" @click="$router.push('/register')">
+                    前往注册
+                </el-link>
+            </div>
+        </div>
+
+        <!-- 背景动态粒子 -->
+        <div class="particles">
+            <div v-for="n in 30" :key="n" class="particle"></div>
         </div>
     </div>
 </template>
 
-
 <style lang="less" scoped>
 .container {
+    --primary-color: #4361ee;
+    --bg-gradient: linear-gradient(45deg, #e0c3fc 0%, #8ec5fc 100%);
+
     width: 100vw;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-gradient);
+    display: grid;
+    place-items: center;
+    position: relative;
     overflow: hidden;
-    position: relative;
 
-    &::before {
-        content: '';
-        position: absolute;
-        width: 400px;
-        height: 400px;
-        background: linear-gradient(#ff6b6b, #ff8e53);
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        top: 30%;
-        left: 20%;
-        filter: blur(80px);
-        opacity: 0.4;
-    }
+    .form-box {
+        width: min(90%, 400px);
+        padding: 2.5rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 1.5rem;
+        box-shadow: 0 12px 30px rgba(67, 97, 238, 0.15);
+        backdrop-filter: blur(8px);
+        z-index: 2;
+        transition: transform 0.3s;
 
-    &::after {
-        content: '';
-        position: absolute;
-        width: 350px;
-        height: 350px;
-        background: linear-gradient(#4bc0c8, #c779d0);
-        border-radius: 50%;
-        transform: translate(50%, 50%);
-        bottom: 0;
-        right: 20%;
-        filter: blur(80px);
-        opacity: 0.4;
-    }
-}
-
-.form-box {
-    width: 800px;
-    height: 500px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 1;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.login-form {
-    padding: 40px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    .form-header {
-        text-align: center;
-        margin-bottom: 40px;
-
-        h1 {
-            color: #fff;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
+        &:hover {
+            transform: translateY(-5px);
         }
 
-        p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1rem;
-            margin-top: 8px;
-        }
-    }
-
-    .login-type-switch {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin-bottom: 20px;
-
-        .el-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            letter-spacing: 1px;
-            background: transparent;
-            border: none;
-            color: #fff;
-            transition: all 0.3s ease;
-
-            &:hover {
-                color: #667eea;
-            }
-
-            &.is-primary {
-                color: #667eea;
-                font-weight: bold;
-            }
-        }
-    }
-
-    .form-group {
-        .custom-input {
-            :deep(.el-input__wrapper) {
-                background: rgba(255, 255, 255, 0.1);
-                border: none;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                border-radius: 8px;
-                padding: 12px 20px;
-                transition: all 0.3s ease;
-
-                &:hover {
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-                }
-
-                &.is-focus {
-                    background: rgba(255, 255, 255, 0.2);
-                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-                }
-            }
-
-            :deep(.el-input__inner) {
-                color: #fff;
-
-                &::placeholder {
-                    color: rgba(255, 255, 255, 0.6);
-                }
-            }
-
-            .iconfont {
-                color: rgba(255, 255, 255, 0.6);
-                font-size: 18px;
-                margin-right: 10px;
-            }
-        }
-
-        .captcha-box {
-            display: flex;
-            gap: 15px;
-            width: 100%;
-
-            .captcha-img {
-                position: relative;
-                flex: 1;
-                height: 40px;
-                border-radius: 8px;
-                overflow: hidden;
-                cursor: pointer;
-                transition: transform 0.3s ease;
-
-                &:hover {
-                    transform: scale(1.02);
-
-                    .icon-refresh {
-                        opacity: 1;
-                    }
-                }
-
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
-
-                .icon-refresh {
-                    position: absolute;
-                    right: 5px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    color: #fff;
-                    font-size: 16px;
-                    opacity: 0.6;
-                    transition: opacity 0.3s ease;
-                }
-            }
-        }
-
-        .login-btn {
-            width: 100%;
-            height: 45px;
-            font-size: 16px;
-            letter-spacing: 1px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border: none;
-            transition: all 0.3s ease;
-
-            &:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-            }
-
-            .iconfont {
-                margin-right: 8px;
-                font-size: 16px;
-            }
-        }
-
-        .form-footer {
+        .header {
             text-align: center;
-            margin-top: 20px;
-            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
 
-            .register-btn {
-                color: #a3bffa;
-                padding: 0 5px;
-
-                &:hover {
-                    color: #667eea;
-                }
+            h1 {
+                color: var(--primary-color);
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
             }
+
+            p {
+                color: #6c757d;
+                font-size: 0.9rem;
+            }
+        }
+
+        .login-type {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1.5rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            font-weight: bold;
+            background: var(--primary-color);
+            transition: all 0.3s;
+
+            &:hover {
+                opacity: 0.9;
+                transform: scale(0.98);
+            }
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+
+
+    }
+
+    // 动态粒子背景
+    .particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 8s infinite linear;
         }
     }
 }
 
-.login-type-switch {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 30px;
-    justify-content: center;
+@keyframes float {
 
-    .type-item {
-        display: flex;
-        align-items: center;
-        padding: 12px 25px;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.08);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
-
-        &:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        &.active {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .iconfont {
-            font-size: 18px;
-            margin-right: 8px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        span {
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 500;
-        }
+    0%,
+    100% {
+        transform: translate(0, 0);
     }
-}
 
-.area-select {
-    :deep(.el-input__wrapper) {
-        background: transparent;
-        box-shadow: none !important;
-
-        .el-input__inner {
-            color: rgba(255, 255, 255, 0.8);
-        }
+    25% {
+        transform: translate(5vw, -10vh);
     }
-}
 
-.social-login {
-    display: flex;
-    gap: 20px;
-    margin-top: 15px;
+    50% {
+        transform: translate(-3vw, 5vh);
+    }
 
-    .iconfont {
-        font-size: 24px;
-        color: rgba(255, 255, 255, 0.7);
-        cursor: pointer;
-        transition: all 0.3s ease;
-
-        &:hover {
-            transform: translateY(-3px);
-            color: #fff;
-
-            &.icon-wechat {
-                color: #2aae67;
-            }
-
-            &.icon-qq {
-                color: #12b7f5;
-            }
-
-            &.icon-github {
-                color: #333;
-            }
-        }
+    75% {
+        transform: translate(8vw, 7vh);
     }
 }
 </style>

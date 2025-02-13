@@ -1,6 +1,5 @@
 package com.blog.gateway.filters;
 
-import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -13,15 +12,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.cors.reactive.CorsUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
 @Component
 public class CorsFilter implements GlobalFilter, Ordered {
     /**
-     * 处理跨域请求的过滤器方法
-     * 该方法用于在网关层面添加跨域请求相关的响应头，以支持跨域请求
+     * 自定义过滤器处理跨域请求
      *
-     * @param exchange 服务器Web交换对象，包含请求和响应等信息
+     * @param exchange 服务器Web交换对象，包含请求和响应
      * @param chain 过滤器链对象，用于执行下一个过滤器
-     * @return 返回一个Mono<Void>，表示过滤器操作是异步的
+     * @return 返回一个空的Mono对象，表示过滤器执行完毕
      */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

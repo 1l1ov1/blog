@@ -11,22 +11,37 @@ import java.util.Date;
 
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "vei@i#ihfoiq(*&^fhwieo!@)$_+f";
+    // 使用 Keys.secretKeyFor 生成一个足够安全的密钥
+    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final Long EXPIRATION_TIME = 1000L * 60 * 60 * 3L; // 3 小时
-    // 将密钥转换为 Key 对象
-    private static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
-            /**
-             * 生成 JWT
-             *
-             * @param userId 用户Id
-             * @return 生成的 JWT 字符串
-             */
-    public static String generateToken(Long userId) {
+
+    /**
+     * 生成 JWT，默认有效期是3 小时
+     *
+     * @param str 字符串
+     * @return 生成的 JWT 字符串
+     */
+    public static String generateToken(String str) {
         return Jwts.builder()
-                .setSubject(userId + "")
+                .setSubject(str)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // 1 天
-                .signWith(SignatureAlgorithm.HS256,key)
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    /**
+     * 生成 JWT，自定义有效期
+     * @param str 字符串
+     * @param expirationTime 过期时间，单位是毫秒
+     * @return token令牌
+     */
+    public static String generateToken(String str, Long expirationTime) {
+        return Jwts.builder()
+                .setSubject(str)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 

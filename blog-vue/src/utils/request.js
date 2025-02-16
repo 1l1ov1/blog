@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { userStore } from '@/stores'
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_URL,
+  baseURL: '/api',
   timeout: 5000,
 })
 
-instant.defaults.withCredentials = true
+instance.defaults.withCredentials = true
 // 添加请求拦截器
 instance.interceptors.request.use(
   function (config) {
@@ -36,3 +36,5 @@ instance.interceptors.response.use(
     return Promise.reject(error)
   },
 )
+
+export default instance

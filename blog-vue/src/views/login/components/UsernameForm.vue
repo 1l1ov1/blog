@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { getCaptcha } from '@/api/auth'
 const prop = defineProps({
     loginType: {
         type: String,
@@ -32,6 +33,20 @@ const formRules = ref({
     ],
     captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
 })
+const captcha = ref('')
+const captchaKey = ref('')
+// 获取验证码
+const fetchCaptcha = async () => {
+    const response = await getCaptcha();
+    // 设置令牌，登录的时候要用这个令牌去redis中查询验证码
+    captchaKey.value = response.headers['x-captcha-key']
+    captcha.value = URL.createObjectURL(response.data)
+
+}
+
+onMounted(() => {
+    fetchCaptcha();
+})
 </script>
 
 <template>
@@ -45,8 +60,8 @@ const formRules = ref({
         </el-form-item>
         <el-form-item prop="captcha">
             <el-input v-model="form.captcha" placeholder="请输入验证码" prefix-icon="Key" size="large" clearable
-                style="width: 60%; margin-right: 5%;" />
-            <el-image style="height: 100%; width: 35%;" />
+                style="width: 60%; margin-right: 2%;" />
+            <el-image :src="captcha" style="height: 100%; width: 38%;" @click="fetchCaptcha()" />
         </el-form-item>
     </el-form>
 </template>

@@ -49,9 +49,7 @@ onMounted(() => {
                 <el-button :type="loginType === 'phone' ? 'primary' : 'text'" @click="switchLoginType('phone')">
                     手机登录
                 </el-button>
-                <!-- <el-button :type="loginType === 'email' ? 'primary' : 'text'" @click="switchLoginType('email')">
-                    邮箱登录
-                </el-button> -->
+
             </div>
 
             <!-- 用户名登录 -->
@@ -59,18 +57,6 @@ onMounted(() => {
 
             <!-- 手机登录 -->
             <PhoneForm :loginType="loginType" />
-
-            <!-- 邮箱登录 
-            <el-form v-if="loginType === 'email'" :model="form" ref="formRef">
-                <el-form-item prop="email">
-                    <el-input v-model="form.email" placeholder="请输入邮箱" prefix-icon="Message" size="large" clearable />
-                </el-form-item>
-                <el-form-item prop="password">
-                    <el-input v-model="form.password" placeholder="请输入密码" prefix-icon="Lock" size="large" show-password
-                        clearable />
-                </el-form-item>
-            </el-form>
-            -->
 
             <!-- 提交按钮 -->
             <el-button type="primary" size="large" round class="submit-btn" @click="submitForm">

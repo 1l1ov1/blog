@@ -2,22 +2,48 @@
 import { ref, onMounted } from 'vue';
 import UsernameForm from './components/UsernameForm.vue'
 import PhoneForm from './components/PhoneForm.vue'
-const formRef = ref(null);
-const loginType = ref('username'); // 当前登录方式：username（用户名）、phone（手机）
+import { showErrorMessage, showSuccessMessage } from '@/utils/message'
+import { login } from '@/api/auth'
+import responseCode from '@/enums/responseCode'
+const formRef = ref();
+const InputType = ref('username'); // 当前登录方式：username（用户名）、phone（手机）
 // 切换登录方式
-const switchLoginType = (type) => {
-    loginType.value = type;
+const switchInputType = (type) => {
+    InputType.value = type;
 };
 
 // 提交表单
-const submitForm = () => {
-    formRef.value.validate((valid) => {
-        if (valid) {
-            console.log('表单提交成功', form.value);
-        } else {
-            console.log('表单验证失败');
+const submitForm = async () => {
+    const formDate = await formRef.value.getFormDate();
+    console.log(formDate)
+    if (formDate) {
+        let form = {
+            ...formDate,
+            InputType: InputType.value
         }
-    });
+        login(form).then(res => {
+            if (res.code === responseCode.SUCCESS) {
+                showSuccessMessage('登录成功！', {
+                    grouping: true
+                });
+                // 登录成功，跳转到首页
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            } else {
+                showErrorMessage(res.msg, {
+                    grouping: true
+                });
+                // TODO 刷新验证码
+
+            }
+        })
+    } else {
+        // 如果说不存在
+        showErrorMessage('表单验证失败，请检查输入信息！', {
+            grouping: true
+        });
+    }
 };
 // 动态粒子初始化
 onMounted(() => {
@@ -43,20 +69,20 @@ onMounted(() => {
 
             <!-- 登录方式切换 -->
             <div class="login-type">
-                <el-button :type="loginType === 'username' ? 'primary' : 'text'" @click="switchLoginType('username')">
+                <el-button :type="InputType === 'username' ? 'primary' : 'text'" @click="switchInputType('username')">
                     用户名登录
                 </el-button>
-                <el-button :type="loginType === 'phone' ? 'primary' : 'text'" @click="switchLoginType('phone')">
+                <el-button :type="InputType === 'phone' ? 'primary' : 'text'" @click="switchInputType('phone')">
                     手机登录
                 </el-button>
 
             </div>
 
             <!-- 用户名登录 -->
-            <UsernameForm :loginType="loginType" />
+            <UsernameForm ref="formRef" :InputType="InputType" />
 
             <!-- 手机登录 -->
-            <PhoneForm :loginType="loginType" />
+            <PhoneForm :InputType="InputType" />
 
             <!-- 提交按钮 -->
             <el-button type="primary" size="large" round class="submit-btn" @click="submitForm">

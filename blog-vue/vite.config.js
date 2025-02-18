@@ -23,14 +23,19 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     AutoImport({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        ElementPlusResolver(),
+        // 自动导入图标组件
+        IconsResolver({}),
+      ],
     }),
     Components({
       resolvers: [
         ElementPlusResolver(),
         // 自动注册图标组件
         IconsResolver({
-          enabledCollections: ['ep'],
+          enabledCollections: ['ep'], // 启用 Element Plus 图标集合
+          alias: { ep: 'element-plus' }, // 集合别名（隐式存在可不写）
         }),
       ],
     }),

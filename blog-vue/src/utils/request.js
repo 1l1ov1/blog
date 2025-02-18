@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { userStore } from '@/stores'
+import responseCode from '@/enums/responseCode'
+import { showErrorMessage, showSuccessMessage } from '@/utils/message'
 const instance = axios.create({
   baseURL: '/api',
   timeout: 5000,
@@ -28,7 +30,15 @@ instance.interceptors.response.use(
   function (response) {
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
-    return response
+    if (response.data.type === 'image/jpeg') {
+      return response
+    }
+    console.log(response)
+    if (response.data.code !== responseCode.SUCCESS) {
+      showErrorMessage(response.data.msg)
+      return
+    }
+    return response.data
   },
   function (error) {
     // 超出 2xx 范围的状态码都会触发该函数。

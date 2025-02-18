@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import { getCaptcha } from '@/api/auth'
 import { throttle } from '@/utils/debounce-throttle-util'
 const prop = defineProps({
-    loginType: {
+    InputType: {
         type: String,
         required: true
     }
@@ -63,7 +63,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <el-form :rules="formRules" v-show="prop.loginType === 'username'" :model="form" ref="formRef">
+    <el-form :rules="formRules" v-show="prop.InputType === 'username'" :model="form" ref="formRef">
         <el-form-item prop="username">
             <el-input v-model="form.username" placeholder="请输入用户名" prefix-icon="User" size="large" clearable />
         </el-form-item>

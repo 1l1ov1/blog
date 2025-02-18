@@ -40,7 +40,8 @@ public class KaptchaConfig {
     private String fontSize;
     @Value("${kaptcha.textproducer.font.names:Arial,Courier}")
     private String fontNames;
-
+    @Value("${kaptcha.noise.impl}")
+    private String noiseImpl;
     /**
      * 创建并配置一个DefaultKaptcha bean
      * 该方法主要用于Spring框架中，通过注解@Bean来定义一个bean
@@ -96,6 +97,8 @@ public class KaptchaConfig {
         // 设置字体名称
         properties.setProperty(Constants.KAPTCHA_TEXTPRODUCER_FONT_NAMES, fontNames);
 
+        // 设置噪点实现类
+        properties.setProperty(Constants.KAPTCHA_NOISE_IMPL, noiseImpl);
         // 实例化Config对象，并传入配置属性
         Config config = new Config(properties);
 

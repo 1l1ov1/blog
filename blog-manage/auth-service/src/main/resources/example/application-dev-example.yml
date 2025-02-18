@@ -1,0 +1,48 @@
+mysql:
+  username: mysql账号
+  password: mysql密码
+  port: 3307
+  database: user_service
+  host: 120.76.203.138
+
+swagger:
+  enabled: true
+  title: 博客系统授权服务相关接口
+  description: 博客系统授权服务相关接口
+  email: 邮箱（可写可不写）
+  concat: 姓名（可写可不写
+  version: 版本号（可写可不写）
+  url: ""
+  package: com.blog.auth.controller
+
+
+kaptcha:
+  border: "no"  # 去掉边框
+  border.color: 105,179,90
+  textproducer.font.color: black  # 文字颜色改为白色
+  image.width: 120  # 增加宽度
+  image.height: 32 # 增加高度
+  textproducer.font.size: 26  # 增加字体大小
+  textproducer.font.names: Arial, Courier  # 使用更清晰的字体
+  textproducer.char.string: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+  textproducer.char.length: 5  # 增加验证码长度
+  session.key: kaptcha_code
+  obscurificator.impl: com.google.code.kaptcha.impl.WaterRipple  # 使用水波纹干扰线
+  noise.impl: com.google.code.kaptcha.impl.NoNoise  # 去掉噪点干扰
+  background.impl: com.google.code.kaptcha.impl.DefaultBackground  # 去掉背景噪点
+  background.clear.from: 230,230,250  # 设置背景颜色
+  background.clear.to: 164,164,188
+
+## 水纹 com.google.code.kaptcha.impl.WaterRipple
+## 鱼眼 com.google.code.kaptcha.impl.FishEyeGimpy
+## 阴影 com.google.code.kaptcha.impl.ShadowGimpy
+
+redis:
+  host: 120.76.203.138
+  password: 123
+  database: 1
+  port: 6379
+  lettuce:
+    max-idle: 8
+    min-idle: 0
+    max-wait: 10s

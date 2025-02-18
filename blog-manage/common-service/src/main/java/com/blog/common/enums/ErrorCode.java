@@ -25,11 +25,12 @@ public enum ErrorCode {
     USER_PHONE_ERROR("0x0111", "手机号错误"),
     CAPTCHA_ERROR("0x0112", "验证码错误"),
     CAPTCHA_EXPIRE("0x0113", "验证码已过期"),
-
-
+    USERNAME_LENGTH_ERROR("0x0114", "用户名长度错误"),
+    PASSWORD_LENGTH_ERROR("0x0115", "密码长度错误"),
+    PASSWORD_FORMAT_ERROR("0x0116", "密码格式错误"),
 
     ARGUMENT_IS_NULL("0x0200", "参数为空"),
-
+    // TODO 校验的错误提示
 
 
     ;

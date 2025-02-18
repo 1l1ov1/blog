@@ -1,12 +1,12 @@
 package com.blog.auth.enums;
 
-public enum LoginType {
+public enum InputType {
     USERNAME("username"),
     PHONE("phone"),
     ;
     private final String type;
 
-    LoginType(String type) {
+    InputType(String type) {
         this.type = type;
     }
 
@@ -14,10 +14,10 @@ public enum LoginType {
         return type;
     }
 
-    public static LoginType getLoginType(String type) {
-        for (LoginType loginType : LoginType.values()) {
-            if (loginType.getType().equals(type)) {
-                return loginType;
+    public static InputType getLoginType(String type) {
+        for (InputType inputType : InputType.values()) {
+            if (inputType.getType().equals(type)) {
+                return inputType;
             }
         }
         return null;

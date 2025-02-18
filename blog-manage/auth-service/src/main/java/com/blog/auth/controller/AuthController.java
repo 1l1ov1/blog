@@ -1,6 +1,7 @@
 package com.blog.auth.controller;
 
 
+import com.blog.auth.enums.LoginRelationConstants;
 import com.blog.auth.service.AuthService;
 import com.blog.auth.utils.JwtUtil;
 import com.blog.common.domain.dto.UserDTO;
@@ -20,7 +21,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class AuthController {
     @Autowired
     private Producer kaptchaProducer;
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisUtil redisUtil;
     @PostMapping("/login")
     @ApiOperation(value = "用户登录")
     public Result Login(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) {
@@ -82,9 +82,8 @@ public class AuthController {
         // 创建验证码令牌
         String capTextKey = JwtUtil.generateToken(capText, 60 * 1000L);
         // 将JWT作为参数返回给前端
-        response.setHeader("X-Captcha-Key", capTextKey);
+        response.setHeader(LoginRelationConstants.CAPTCHA_HEADER, capTextKey);
         // 存储到redis中
-        RedisUtil redisUtil = new RedisUtil(redisTemplate);
         redisUtil.setStringCacheValueWithExpiration(capTextKey, capText, 60);
 
         // 根据验证码文本创建验证码图片

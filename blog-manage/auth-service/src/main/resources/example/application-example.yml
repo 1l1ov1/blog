@@ -1,0 +1,13 @@
+server:
+  port: 8081
+
+kaptcha:
+  border: ${kaptcha.border}
+  border.color: ${kaptcha.border.color}
+  textproducer.font.color: ${kaptcha.textproducer.font.color}
+  image.width: ${kaptcha.image.width}
+  image.height: ${kaptcha.image.height}
+  textproducer.char.string: ${kaptcha.textproducer.char.string}
+  textproducer.char.length: ${kaptcha.textproducer.char.length}
+  session.key: ${kaptcha.session.key}
+  obscurificator.impl: ${kaptcha.obscurificator.impl}

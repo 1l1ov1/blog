@@ -33,4 +33,5 @@ public class UserVo {
     private String avatarPath;
     @ApiModelProperty("用户令牌token")
     private String token;
+    // TODO 增加角色、权限
 }

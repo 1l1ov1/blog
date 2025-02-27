@@ -16,7 +16,7 @@ public interface AuthService extends IService<User> {
      */
     UserVo login(UserDTO userDTO, HttpServletRequest request);
 
-    void register(UserDTO user);
+    void register(UserDTO userDTO);
 
     void UserUpdate(UserDTO userDTO);
 }

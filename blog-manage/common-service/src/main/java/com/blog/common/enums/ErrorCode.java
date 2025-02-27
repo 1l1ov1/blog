@@ -28,12 +28,11 @@ public enum ErrorCode {
     USERNAME_LENGTH_ERROR("0x0114", "用户名长度错误"),
     PASSWORD_LENGTH_ERROR("0x0115", "密码长度错误"),
     PASSWORD_FORMAT_ERROR("0x0116", "密码格式错误"),
-
+    USER_EXIST("0x0117", "用户已存在"),
     ARGUMENT_IS_NULL("0x0200", "参数为空"),
-    // TODO 校验的错误提示
 
 
-    ;
+;
 
 
     private final String code;

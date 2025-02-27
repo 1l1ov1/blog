@@ -11,3 +11,7 @@ export const login = (data) => {
     },
   })
 }
+
+export const register = (data) => {
+  return request.post('/auth/register', data)
+}

@@ -15,11 +15,10 @@ const switchInputType = (type) => {
 // 提交表单
 const submitForm = async () => {
     const formDate = await formRef.value.getFormDate();
-    console.log(formDate)
     if (formDate) {
         let form = {
             ...formDate,
-            InputType: InputType.value
+            inputType: InputType.value
         }
         login(form).then(res => {
             if (res.code === responseCode.SUCCESS) {
